@@ -1,9 +1,11 @@
 const std = @import("std");
-
+const builtin = @import("builtin");
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
 // runner.
 pub fn build(b: *std.Build) !void {
+    if (builtin.zig_version.minor < 13)
+        @compileError("Jarasic Tycoon requires zig >= v0.13.0 ");
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
