@@ -1,24 +1,23 @@
 const std = @import("std");
+const ray = @cImport({
+    @cInclude("raylib.h");
+});
 
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+    const screen_width: i32 = 800;
+    const screen_height: i32 = 450;
+    ray.InitWindow(screen_width, screen_height, "Jarasic Tycoon");
+    defer ray.CloseWindow();
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    ray.SetTargetFPS(60);
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    while (!ray.WindowShouldClose()) {
+        ray.BeginDrawing();
 
-    try bw.flush(); // don't forget to flush!
-}
+        ray.ClearBackground(ray.RAYWHITE);
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+        ray.DrawText("Does an empty window count as a game?", 190, 200, 20, ray.LIGHTGRAY);
+
+        ray.EndDrawing();
+    }
 }

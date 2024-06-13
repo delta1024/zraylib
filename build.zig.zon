@@ -43,6 +43,9 @@
         //    // actually used.
         //    .lazy = false,
         //},
+        .raylib = .{
+            .path = "raylib",
+        },
     },
 
     // Specifies the set of files and directories that are included in this package.
