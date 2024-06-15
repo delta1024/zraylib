@@ -1,42 +1,23 @@
 const std = @import("std");
-const builtin = @import("builtin");
+
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
 // runner.
-pub fn build(b: *std.Build) !void {
-    if (builtin.zig_version.minor < 13)
-        @compileError("Jarasic Tycoon requires zig >= v0.13.0 ");
+pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-
-    const exe = b.addExecutable(.{
-        .name = "jtycn",
-        .root_source_file = b.path("src/main.zig"),
+    const raydep = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
     });
+    const lib = raydep.artifact("raylib");
+    b.installArtifact(lib);
 
-    const raydep = b.dependency("raylib", .{});
-    const raymod = raydep.module("raylib");
-    exe.root_module.addImport("raylib", raymod);
-    b.installArtifact(exe);
-
-    const run_cmd = b.addRunArtifact(exe);
-    run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
-
-    const exe_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
+    const raymod = b.addModule("raylib", .{
         .optimize = optimize,
+        .target = target,
+        .link_libc = true,
+        .root_source_file = b.path("src/root.zig"),
     });
-
-    const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
-
-    const test_step = b.step("test", "Run unit tests");
-    test_step.dependOn(&run_exe_unit_tests.step);
+    raymod.linkLibrary(lib);
 }
