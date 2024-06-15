@@ -24,3 +24,6 @@ pub fn getScreenHeight() u32 {
 pub fn getScreenWidth() u32 {
     return @bitCast(ray.GetScreenWidth());
 }
+pub fn getFPS() u32 {
+    return @intCast(ray.GetFPS());
+}
