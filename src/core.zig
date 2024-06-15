@@ -2,6 +2,7 @@ const std = @import("std");
 const mem = std.mem;
 const ray = @cImport(@cInclude("raylib.h"));
 const t = @import("structs.zig");
+const Key = @import("enums.zig").Key;
 
 pub fn initWindow(width: u32, height: u32, title: [*:0]const u8) void {
     ray.InitWindow(@intCast(width), @intCast(height), title);
@@ -26,4 +27,17 @@ pub fn getScreenWidth() u32 {
 }
 pub fn getFPS() u32 {
     return @intCast(ray.GetFPS());
+}
+pub fn isKeyPressed(k: Key) bool {
+    return ray.IsKeyPressed(@intFromEnum(k));
+}
+pub fn isKeyDown(k: Key) bool {
+    return ray.IsKeyDown(@intFromEnum(k));
+}
+pub fn isKeyReleased(k: Key) bool {
+    return ray.IsKeyReleased(@intFromEnum(k));
+}
+
+pub fn isKeyUp(k: Key) bool {
+    return ray.IsKeyUp(@intFromEnum(k));
 }
