@@ -18,3 +18,9 @@ pub const endDrawing = ray.EndDrawing;
 pub fn setTargetFps(fps: u32) void {
     ray.SetTargetFPS(@intCast(fps));
 }
+pub fn getScreenHeight() u32 {
+    return @bitCast(ray.GetScreenHeight());
+}
+pub fn getScreenWidth() u32 {
+    return @bitCast(ray.GetScreenWidth());
+}
