@@ -4,8 +4,8 @@ const ray = @cImport(@cInclude("raylib.h"));
 const t = @import("structs.zig");
 const Key = @import("enums.zig").Key;
 
-pub fn initWindow(width: u32, height: u32, title: [*:0]const u8) void {
-    ray.InitWindow(@intCast(width), @intCast(height), title);
+pub fn initWindow(width: i32, height: i32, title: [*:0]const u8) void {
+    ray.InitWindow(width, height, title);
 }
 
 pub const closeWindow = ray.CloseWindow;
@@ -16,16 +16,16 @@ pub fn clearBackground(color: t.Color) void {
 pub const beginDrawing = ray.BeginDrawing;
 pub const endDrawing = ray.EndDrawing;
 
-pub fn setTargetFps(fps: u32) void {
-    ray.SetTargetFPS(@intCast(fps));
+pub fn setTargetFps(fps: i32) void {
+    ray.SetTargetFPS(fps);
 }
-pub fn getScreenHeight() u32 {
+pub fn getScreenHeight() i32 {
     return @bitCast(ray.GetScreenHeight());
 }
-pub fn getScreenWidth() u32 {
+pub fn getScreenWidth() i32 {
     return @bitCast(ray.GetScreenWidth());
 }
-pub fn getFPS() u32 {
+pub fn getFPS() i32 {
     return @intCast(ray.GetFPS());
 }
 pub fn isKeyPressed(k: Key) bool {

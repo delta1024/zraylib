@@ -4,8 +4,8 @@ const rty = @import("structs.zig");
 const Color = rty.Color;
 const Vector2 = rty.Vector2;
 const Rectangle = rty.Rectangle;
-pub fn drawRectangle(pos_x: u32, pos_y: u32, width: u32, height: u32, color: Color) void {
-    ray.DrawRectangle(@intCast(pos_x), @intCast(pos_y), @intCast(width), @intCast(height), @as(ray.Color, @bitCast(color)));
+pub fn drawRectangle(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) void {
+    ray.DrawRectangle(pos_x, pos_y, width, height, ray.Color, @bitCast(color));
 }
 pub fn drawRectangleV(position: Vector2, size: Vector2, color: Color) void {
     ray.DrawRectangleV(@bitCast(position), @bitCast(size), @bitCast(color));
