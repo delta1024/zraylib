@@ -27,4 +27,10 @@ pub const Texture = extern struct {
     format: PixelFormat,
 };
 pub const Texture2D = Texture;
+pub const RenderTexture = extern struct {
+    id: i32,
+    texture: Texture,
+    depth: Texture,
+};
+pub const RenderTexture2D = RenderTexture;
 pub const Vector2 = @Vector(2, f32);

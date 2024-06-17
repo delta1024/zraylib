@@ -3,6 +3,7 @@ const mem = std.mem;
 const ray = @cImport(@cInclude("raylib.h"));
 const t = @import("structs.zig");
 const Key = @import("enums.zig").Key;
+const RenderTexture2D = t.RenderTexture2D;
 
 pub fn initWindow(width: i32, height: i32, title: [*:0]const u8) void {
     ray.InitWindow(width, height, title);
@@ -41,3 +42,7 @@ pub fn isKeyReleased(k: Key) bool {
 pub fn isKeyUp(k: Key) bool {
     return ray.IsKeyUp(@intFromEnum(k));
 }
+pub fn beginTextureMode(target: RenderTexture2D) void {
+    ray.BeginTextureMode(@bitCast(target));
+}
+pub const endTextureMode = ray.EndTextureMode;
