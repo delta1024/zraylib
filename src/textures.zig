@@ -37,3 +37,6 @@ pub fn drawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, or
 pub fn fade(color: Color, alpha: f32) Color {
     return @bitCast(ray.Fade(@bitCast(color), alpha));
 }
+pub fn getImageColor(image: Image, x: i32, y: i32) Color {
+    return @bitCast(ray.GetImageColor(@bitCast(image), x, y));
+}
