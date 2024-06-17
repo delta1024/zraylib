@@ -17,3 +17,6 @@ pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
 pub fn getCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle {
     return @bitCast(ray.GetCollisionRec(@bitCast(rec1), @bitCast(rec2)));
 }
+pub fn drawPixel(pos_x: i32, pos_y: i32, color: Color) void {
+    ray.DrawPixel(pos_x, pos_y, @bitCast(color));
+}
