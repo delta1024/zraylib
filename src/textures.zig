@@ -15,6 +15,9 @@ pub fn loadTextureFromImage(image: Image) Texture2D {
 pub fn loadRenderTexture(width: i32, height: i32) RenderTexture2D {
     return @bitCast(ray.LoadRenderTexture(width, height));
 }
+pub fn loadImageFremTexture(texture: Texture2D) Image {
+    return @bitCast(ray.LoadImageFromTexture(@bitCast(texture)));
+}
 pub fn unloadRenderTexture(target: RenderTexture2D) void {
     ray.UnloadRenderTexture(@bitCast(target));
 }
