@@ -14,5 +14,4 @@ pub const structs = @import("structs.zig");
 pub usingnamespace structs;
 pub const enums = @import("enums.zig");
 pub usingnamespace enums;
-
 pub const colors = @import("colors.zig");
