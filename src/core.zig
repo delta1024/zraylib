@@ -2,45 +2,126 @@ const std = @import("std");
 const mem = std.mem;
 const ray = @cImport(@cInclude("raylib.h"));
 const t = @import("structs.zig");
-const Key = @import("enums.zig").KeyboardKey;
+const e = @import("enums.zig");
+const Key = e.KeyboardKey;
 const RenderTexture2D = t.RenderTexture2D;
+const ConfigFlags = e.ConfigFlags;
+const Image = t.Image;
+const Vector2 = t.Vector2;
+const Camera2D = t.Camera2D;
+const Camera3D = t.Camera3D;
+const Shader = t.Shader;
+const VrStereoConfig = t.VrStereoConfig;
 
-// Initialize window and OpenGL context
-pub fn initWindow(width: i32, height: i32, title: [*:0]const u8) void {
-    ray.InitWindow(width, height, title);
+/// Initialize window and OpenGL context
+pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
+    ray.InitWindow(width, height, title.ptr);
 }
 
 /// Close window and unload OpenGL context
 pub const closeWindow = ray.CloseWindow;
 /// Check if application should close (Key.Escape pressed or windows close icon clicked)
 pub const windowShouldClose = ray.WindowShouldClose;
-// bool IsWindowReady(void);                                   // Check if window has been initialized successfully
-// bool IsWindowFullscreen(void);                              // Check if window is currently fullscreen
-// bool IsWindowHidden(void);                                  // Check if window is currently hidden (only PLATFORM_DESKTOP)
-// bool IsWindowMinimized(void);                               // Check if window is currently minimized (only PLATFORM_DESKTOP)
-// bool IsWindowMaximized(void);                               // Check if window is currently maximized (only PLATFORM_DESKTOP)
-// bool IsWindowFocused(void);                                 // Check if window is currently focused (only PLATFORM_DESKTOP)
-// bool IsWindowResized(void);                                 // Check if window has been resized last frame
-// bool IsWindowState(unsigned int flag);                      // Check if one specific window flag is enabled
-// void SetWindowState(unsigned int flags);                    // Set window configuration state using flags (only PLATFORM_DESKTOP)
-// void ClearWindowState(unsigned int flags);                  // Clear window configuration state flags
+/// Check if window has been initialized successfully
+pub const isWindowReady = ray.IsWindowReady;
+/// Check if window is currently fullscreen
+pub const isWindowFullscreen = ray.IsWindowFullscreen;
+/// Check if window is currently hidden (only PLATFORM_DESKTOP)
+pub const isWindowHidden = ray.IsWindowHidden;
+/// Check if window is currently minimized (only PLATFORM_DESKTOP)
+pub const isWindowMinimized = ray.IsWindowMinimized;
+/// Check if window is currently maximized (only PLATFORM_DESKTOP)
+pub const isWindowMaximized = ray.IsWindowMaximized;
+/// Check if window is currently focused (only PLATFORM_DESKTOP)
+pub const isWindowFocused = ray.IsWindowFocused;
+/// Check if window has been resized last frame
+pub const isWindowResized = ray.IsWindowResized;
 
-// void ToggleFullscreen(void);                                // Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
-// void ToggleBorderlessWindowed(void);                        // Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
-// void MaximizeWindow(void);                                  // Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
-// void MinimizeWindow(void);                                  // Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
-// void RestoreWindow(void);                                   // Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
-// void SetWindowIcon(Image image);                            // Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
-// void SetWindowIcons(Image *images, int count);              // Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
-// void SetWindowTitle(const char *title);                     // Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
-// void SetWindowPosition(int x, int y);                       // Set window position on screen (only PLATFORM_DESKTOP)
-// void SetWindowMonitor(int monitor);                         // Set monitor for the current window
-// void SetWindowMinSize(int width, int height);               // Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
-// void SetWindowMaxSize(int width, int height);               // Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
-// void SetWindowSize(int width, int height);                  // Set window dimensions
-// void SetWindowOpacity(float opacity);                       // Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
-// void SetWindowFocused(void);                                // Set window focused (only PLATFORM_DESKTOP)
-// void *GetWindowHandle(void);                                // Get native window handle
+/// Check if one specific window flag is enabled
+pub fn isWindowState(flag: ConfigFlags) bool {
+    return ray.IsWindowState(@intFromEnum(flag));
+}
+pub const ConfigOptions = packed struct(c_uint) {
+    /// Set to run program in fullscreen
+    fullscreen_mode: bool = false,
+    /// Set to allow resizable window
+    window_resizable: bool = false,
+    /// Set to disable window decoration (frame and buttons)
+    window_undecorated: bool = false,
+    /// Set to allow transparent framebuffer
+    window_transparent: bool = false,
+    /// Set to try enabling MSAA 4X
+    msaa_4x_hint: bool = false,
+    /// Set to try enabling V-Sync on GPU
+    vsync_hint: bool = false,
+    /// Set to hide window
+    window_hidden: bool = false,
+    /// Set to allow windows running while minimized
+    window_always_run: bool = false,
+    /// Set to minimize window (iconify)
+    window_minimized: bool = false,
+    /// Set to maximize window (expanded to monitor)
+    window_maximized: bool = false,
+    /// Set to window non focused
+    window_unfocused: bool = false,
+    /// Set to window always on top
+    window_topmost: bool = false,
+    /// Set to support HighDPI
+    window_highdpi: bool = false,
+    /// Set to support mouse passthrough = false, only supported when ConfigFlags.WindowUndecorated
+    window_mouse_passthrough: bool = false,
+    /// Set to run program in borderless windowed mode
+    borderless_windowed_mode: bool = false,
+    /// Set to try enabling interlaced video format (for V3D)
+    interlaced_hint: bool = false,
+};
+/// Set window configuration state using flags (only PLATFORM_DESKTOP)
+pub fn setWindowState(flags: ConfigOptions) void {
+    ray.SetWindowState(@bitCast(flags));
+}
+/// Clear window configuration state flags
+pub fn clearWindowState(flags: ConfigOptions) void {
+    ray.ClearWindowState(@bitCast(flags));
+}
+
+/// Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
+pub const toggleFullscreen = ray.ToggleFullscreen;
+/// Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
+pub const toggleBorderlessWindowed = ray.ToggleBorderlessWindowed;
+/// Set window state: maximized, if resizable (only PLATFORM_DESKTOP)
+pub const maximizeWindow = ray.MaximizeWindow;
+/// Set window state: minimized, if resizable (only PLATFORM_DESKTOP)
+pub const minimizeWindow = ray.MinimizeWindow;
+/// Set window state: not minimized/maximized (only PLATFORM_DESKTOP)
+pub const restoreWindow = ray.RestoreWindow;
+/// Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
+pub fn setWindowIcon(image: Image) void {
+    ray.SetWindowIcon(@bitCast(image));
+}
+/// Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
+pub fn setWindowIcons(images: []Image) void {
+    ray.SetWindowIcons(images.ptr, @intCast(images.len));
+}
+/// Set title for window (only PLATFORM_DESKTOP and PLATFORM_WEB)
+pub fn setWindowTitle(title: [:0]const u8) void {
+    ray.SetWindowTitle(title.ptr);
+}
+/// Set window position on screen (only PLATFORM_DESKTOP)
+pub const setWindowPosition = ray.SetWindowPosition;
+/// Set monitor for the current window
+pub const setWindowMonitor = ray.SetWindowMonitor;
+/// Set window minimum dimensions (for FLAG_WINDOW_RESIZABLE)
+pub const setWindowMinSize = ray.SetWindowMinSize;
+/// Set window maximum dimensions (for FLAG_WINDOW_RESIZABLE)
+pub const setWindowMaxSize = ray.SetWindowMaxSize;
+/// Set window dimensions
+pub const setWindowSize = ray.SetWindowSize;
+/// Set window opacity [0.0f..1.0f] (only PLATFORM_DESKTOP)
+pub const setWindowOpacity = ray.SetWindowOpacity;
+/// Set window focused (only PLATFORM_DESKTOP)
+pub const setWindowFocused = ray.SetWindowFocused;
+/// Get native window handle
+pub const getWindowHandle = ray.GetWindowHandle;
 /// Get current screen width
 pub fn getScreenHeight() i32 {
     return @bitCast(ray.GetScreenHeight());
@@ -50,32 +131,63 @@ pub fn getScreenHeight() i32 {
 pub fn getScreenWidth() i32 {
     return @bitCast(ray.GetScreenWidth());
 }
-// int GetRenderWidth(void);                                   // Get current render width (it considers HiDPI)
-// int GetRenderHeight(void);                                  // Get current render height (it considers HiDPI)
-// int GetMonitorCount(void);                                  // Get number of connected monitors
-// int GetCurrentMonitor(void);                                // Get current connected monitor
-// Vector2 GetMonitorPosition(int monitor);                    // Get specified monitor position
-// int GetMonitorWidth(int monitor);                           // Get specified monitor width (current video mode used by monitor)
-// int GetMonitorHeight(int monitor);                          // Get specified monitor height (current video mode used by monitor)
-// int GetMonitorPhysicalWidth(int monitor);                   // Get specified monitor physical width in millimetres
-// int GetMonitorPhysicalHeight(int monitor);                  // Get specified monitor physical height in millimetres
-// int GetMonitorRefreshRate(int monitor);                     // Get specified monitor refresh rate
-// Vector2 GetWindowPosition(void);                            // Get window position XY on monitor
-// Vector2 GetWindowScaleDPI(void);                            // Get window scale DPI factor
-// const char *GetMonitorName(int monitor);                    // Get the human-readable, UTF-8 encoded name of the specified monitor
+/// Get current render width (it considers HiDPI)
+pub const getRenderWidth = ray.GetRenderWidth;
+/// Get current render height (it considers HiDPI)
+pub const getRenderHeight = ray.GetRenderHeight;
+/// Get number of connected monitors
+pub const getMonitorCount = ray.GetMonitorCount;
+/// Get current connected monitor
+pub const getCurrentMonitor = ray.GetCurrentMonitor;
+/// Get specified monitor position
+pub fn getMonitorPosition(monitor: i32) Vector2 {
+    return @bitCast(ray.GetMonitorPosition(monitor));
+}
+/// Get specified monitor width (current video mode used by monitor)
+pub const getMonitorWidth = ray.GetMonitorWidth;
+/// Get specified monitor height (current video mode used by monitor)
+pub const getMonitorHeight = ray.GetMonitorHeight;
+/// Get specified monitor physical width in millimetres
+pub const getMonitorPhysicalWidth = ray.GetMonitorPhysicalWidth;
+/// Get specified monitor physical height in millimetres
+pub const getMonitorPhysicalHeight = ray.GetMonitorPhysicalHeight;
+/// Get specified monitor refresh rate
+pub const getMonitorRefreshRate = ray.GetMonitorRefreshRate;
+/// Get window position XY on monitor
+pub const getWindowPosition = ray.GetWindowPosition;
+/// Get window scale DPI factor
+pub const getWindowScaleDPI = ray.GetWindowScaleDPI;
+/// Get the human-readable, UTF-8 encoded name of the specified monitor
+pub fn getMonitorName(monitor: i32) [:0]const u8 {
+    const ptr: [*:0]const u8 = @ptrCast(ray.GetMonitorName(monitor));
+    return ptr[0..std.mem.indexOfSentinel(u8, 0, ptr) :0];
+}
 // void SetClipboardText(const char *text);                    // Set clipboard text content
-// const char *GetClipboardText(void);                         // Get clipboard text content
-// void EnableEventWaiting(void);                              // Enable waiting for events on EndDrawing(), no automatic event polling
-// void DisableEventWaiting(void);                             // Disable waiting for events on EndDrawing(), automatic events polling
-//
-// // Cursor-related functions
-// void ShowCursor(void);                                      // Shows cursor
-// void HideCursor(void);                                      // Hides cursor
-// bool IsCursorHidden(void);                                  // Check if cursor is not visible
-// void EnableCursor(void);                                    // Enables cursor (unlock cursor)
-// void DisableCursor(void);                                   // Disables cursor (lock cursor)
-// bool IsCursorOnScreen(void);                                // Check if cursor is on the screen
-//
+pub fn setClipboardText(text: [:0]const u8) void {
+    ray.SetClipboardText(text.ptr);
+}
+/// Get clipboard text content
+pub fn getClipboardText() [:0]const u8 {
+    const ptr: [*:0]const u8 = @ptrCast(ray.GetClipboardText());
+    return ptr[0..std.mem.indexOfSentinel(u8, 0, ptr) :0];
+}
+/// Enable waiting for events on endDrawing(), no automatic event polling
+pub const enableEventWaiting = ray.EnableEventWaiting;
+/// Disable waiting for events on endDrawing(), automatic events polling
+pub const disableEventWaiting = ray.DisableEventWaiting;
+
+/// Shows cursor
+pub const showCursor = ray.ShowCursor;
+/// Hides cursor
+pub const hideCursor = ray.HideCursor;
+/// Check if cursor is not visible
+pub const isCursorHidden = ray.IsCursorHidden;
+/// Enables cursor (unlock cursor)
+pub const enableCursor = ray.EnableCursor;
+/// Disables cursor (lock cursor)
+pub const disableCursor = ray.DisableCursor;
+/// Check if cursor is on the screen
+pub const isCursorOnScreen = ray.IsCursorOnScreen;
 
 /// Set background color (framebuffer clear color)
 pub fn clearBackground(color: t.Color) void {
@@ -86,26 +198,46 @@ pub const beginDrawing = ray.BeginDrawing;
 /// End canvas drawing and swap buffers (double buffering)
 pub const endDrawing = ray.EndDrawing;
 // // Drawing-related functions
-// void BeginMode2D(Camera2D camera);                          // Begin 2D mode with custom camera (2D)
-// void EndMode2D(void);                                       // Ends 2D mode with custom camera
-// void BeginMode3D(Camera3D camera);                          // Begin 3D mode with custom camera (3D)
-// void EndMode3D(void);                                       // Ends 3D mode and returns to default 2D orthographic mode
+/// Begin 2D mode with custom camera (2D)
+pub fn beginMode2D(camera: Camera2D) void {
+    ray.BeginMode2D(@bitCast(camera));
+}
+/// Ends 2D mode with custom camera
+pub const endMode2D = ray.EndMode2D;
+/// Begin 3D mode with custom camera (3D)
+pub fn beginMode3D(camera: Camera3D) void {
+    ray.BeginMode3D(@bitCast(camera));
+}
+/// Ends 3D mode and returns to default 2D orthographic mode
+pub const endMode3D = ray.EndMode3D;
 /// Begin drawing to render texture
 pub fn beginTextureMode(target: RenderTexture2D) void {
     ray.BeginTextureMode(@bitCast(target));
 }
 /// Ends drawing to render texture
 pub const endTextureMode = ray.EndTextureMode;
-// void EndTextureMode(void);
-// void BeginShaderMode(Shader shader);                        // Begin custom shader drawing
-// void EndShaderMode(void);                                   // End custom shader drawing (use default shader)
-// void BeginBlendMode(int mode);                              // Begin blending mode (alpha, additive, multiplied, subtract, custom)
-// void EndBlendMode(void);                                    // End blending mode (reset to default: alpha blending)
-// void BeginScissorMode(int x, int y, int width, int height); // Begin scissor mode (define screen area for following drawing)
-// void EndScissorMode(void);                                  // End scissor mode
-// void BeginVrStereoMode(VrStereoConfig config);              // Begin stereo rendering (requires VR simulator)
-// void EndVrStereoMode(void);                                 // End stereo rendering (requires VR simulator)
-//
+/// Begin custom shader drawing
+pub fn beginShaderMode(shader: Shader) void {
+    ray.BeginShaderMode(@bitCast(shader));
+}
+/// End custom shader drawing (use default shader)
+pub const endShaderMode = ray.EndShaderMode;
+
+/// Begin blending mode (alpha, additive, multiplied, subtract, custom)
+pub const beginBlendMode = ray.BeginBlendMode;
+/// End blending mode (reset to default: alpha blending)
+pub const endBlendMode = ray.EndBlendMode;
+/// Begin scissor mode (define screen area for following drawing)
+pub const beginScissorMode = ray.BeginScissorMode;
+/// End scissor mode
+pub const endScissorMode = ray.EndScissorMode;
+/// Begin stereo rendering (requires VR simulator)
+pub fn beginVrStereoMode(config: VrStereoConfig) void {
+    ray.BeginVrStereoMode(@bitCast(config));
+}
+/// End stereo rendering (requires VR simulator)
+pub const endVrStereoMode = ray.EndVrStereoMode;
+
 // // VR stereo config functions for VR simulator
 // VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);     // Load VR stereo config for VR simulator device parameters
 // void UnloadVrStereoConfig(VrStereoConfig config);           // Unload VR stereo config
@@ -137,25 +269,29 @@ pub const endTextureMode = ray.EndTextureMode;
 pub fn setTargetFps(fps: i32) void {
     ray.SetTargetFPS(fps);
 }
-// float GetFrameTime(void);                                   // Get time in seconds for last frame drawn (delta time)
-// double GetTime(void);                                       // Get elapsed time in seconds since InitWindow()
-
+/// Get time in seconds for last frame drawn (delta time)
+pub const getFrameTime = ray.GetFrameTime;
+/// Get elapsed time in seconds since InitWindow()
+pub const getTime = ray.GetTime;
 /// Get current FPS
-pub fn getFPS() i32 {
-    return @intCast(ray.GetFPS());
-}
+pub const getFPS = ray.GetFPS;
 //
 // // Custom frame control functions
 // // NOTE: Those functions are intended for advance users that want full control over the frame processing
 // // By default EndDrawing() does this job: draws everything + SwapScreenBuffer() + manage frame timing + PollInputEvents()
 // // To avoid that behaviour and control frame processes manually, enable in config.h: SUPPORT_CUSTOM_FRAME_CONTROL
-// void SwapScreenBuffer(void);                                // Swap back buffer with front buffer (screen drawing)
-// void PollInputEvents(void);                                 // Register all input events
-// void WaitTime(double seconds);                              // Wait for some time (halt program execution)
+/// Swap back buffer with front buffer (screen drawing)
+pub const swapScreenBuffer = ray.SwapScreenBuffer;
+/// Register all input events
+pub const pollInputEvents = ray.PollInputEvents;
+/// Wait for some time (halt program execution)
+pub const waitTime = ray.WaitTime;
 //
 // // Random values generation functions
-// void SetRandomSeed(unsigned int seed);                      // Set the seed for the random number generator
-// int GetRandomValue(int min, int max);                       // Get a random value between min and max (both included)
+/// Set the seed for the random number generator
+pub const setRandomSeed = ray.SetRandomSeed;
+/// Get a random value between min and max (both included)
+pub const getRandomValue = ray.GetRandomValue;
 // int *LoadRandomSequence(unsigned int count, int min, int max); // Load random values sequence, no values repeated
 // void UnloadRandomSequence(int *sequence);                   // Unload random values sequence
 //
@@ -224,8 +360,10 @@ pub fn getFPS() i32 {
 // bool ExportAutomationEventList(AutomationEventList list, const char *fileName);   // Export automation events list as text file
 // void SetAutomationEventList(AutomationEventList *list);                           // Set automation event list to record to
 // void SetAutomationEventBaseFrame(int frame);                                      // Set automation event internal base frame to start recording
-// void StartAutomationEventRecording(void);                                         // Start recording automation events (AutomationEventList must be set)
-// void StopAutomationEventRecording(void);                                          // Stop recording automation events
+/// Start recording automation events (AutomationEventList must be set)
+pub const startAutomationEventRecording = ray.StartAutomationEventRecording;
+/// Stop recording automation events
+pub const stopAutomationEventRecording = ray.StopAutomationEventRecording;
 // void PlayAutomationEvent(AutomationEvent event);                                  // Play a recorded automation event
 //
 // //------------------------------------------------------------------------------------
@@ -255,8 +393,10 @@ pub fn isKeyUp(k: Key) bool {
     return ray.IsKeyUp(@intFromEnum(k));
 }
 
-// int GetKeyPressed(void);                                // Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
-// int GetCharPressed(void);                               // Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
+/// Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
+pub const getKeyPressed = ray.GetKeyPressed;
+/// Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
+pub const getCharPressed = ray.GetCharPressed;
 // void SetExitKey(int key);                               // Set a custom key to exit program (default is ESC)
 //
 // // Input-related functions: gamepads
@@ -266,7 +406,8 @@ pub fn isKeyUp(k: Key) bool {
 // bool IsGamepadButtonDown(int gamepad, int button);      // Check if a gamepad button is being pressed
 // bool IsGamepadButtonReleased(int gamepad, int button);  // Check if a gamepad button has been released once
 // bool IsGamepadButtonUp(int gamepad, int button);        // Check if a gamepad button is NOT being pressed
-// int GetGamepadButtonPressed(void);                      // Get the last gamepad button pressed
+/// Get the last gamepad button pressed
+pub const getGamepadButtonPressed = ray.GetGamepadButtonPressed;
 // int GetGamepadAxisCount(int gamepad);                   // Get gamepad axis count for a gamepad
 // float GetGamepadAxisMovement(int gamepad, int axis);    // Get axis movement value for a gamepad axis
 // int SetGamepadMappings(const char *mappings);           // Set internal gamepad mappings (SDL_GameControllerDB)
@@ -276,35 +417,46 @@ pub fn isKeyUp(k: Key) bool {
 // bool IsMouseButtonDown(int button);                     // Check if a mouse button is being pressed
 // bool IsMouseButtonReleased(int button);                 // Check if a mouse button has been released once
 // bool IsMouseButtonUp(int button);                       // Check if a mouse button is NOT being pressed
-// int GetMouseX(void);                                    // Get mouse position X
-// int GetMouseY(void);                                    // Get mouse position Y
+/// Get mouse position X
+pub const getMouseX = ray.GetMouseX;
+/// Get mouse position Y
+pub const getMouseY = ray.GetMouseY;
 // Vector2 GetMousePosition(void);                         // Get mouse position XY
 // Vector2 GetMouseDelta(void);                            // Get mouse delta between frames
 // void SetMousePosition(int x, int y);                    // Set mouse position XY
 // void SetMouseOffset(int offsetX, int offsetY);          // Set mouse offset
 // void SetMouseScale(float scaleX, float scaleY);         // Set mouse scaling
-// float GetMouseWheelMove(void);                          // Get mouse wheel movement for X or Y, whichever is larger
+/// Get mouse wheel movement for X or Y, whichever is larger
+pub const getMouseWheelMove = ray.GetMouseWheelMove;
 // Vector2 GetMouseWheelMoveV(void);                       // Get mouse wheel movement for both X and Y
 // void SetMouseCursor(int cursor);                        // Set mouse cursor
 //
 // // Input-related functions: touch
-// int GetTouchX(void);                                    // Get touch position X for touch point 0 (relative to screen size)
-// int GetTouchY(void);                                    // Get touch position Y for touch point 0 (relative to screen size)
+/// Get touch position X for touch point 0 (relative to screen size)
+pub const getTouchX = ray.GetTouchX;
+/// Get touch position Y for touch point 0 (relative to screen size)
+pub const getTouchY = ray.GetTouchY;
 // Vector2 GetTouchPosition(int index);                    // Get touch position XY for a touch point index (relative to screen size)
-// int GetTouchPointId(int index);                         // Get touch point identifier for given index
-// int GetTouchPointCount(void);                           // Get number of touch points
+/// Get touch point identifier for given index
+pub const getTouchPointId = ray.GetTouchPointId;
+/// Get number of touch points
+pub const getTouchPointCount = ray.GetTouchPointCount;
 //
 // //------------------------------------------------------------------------------------
 // // Gestures and Touch Handling Functions (Module: rgestures)
 // //------------------------------------------------------------------------------------
 // void SetGesturesEnabled(unsigned int flags);      // Enable a set of gestures using flags
 // bool IsGestureDetected(unsigned int gesture);     // Check if a gesture have been detected
-// int GetGestureDetected(void);                     // Get latest detected gesture
-// float GetGestureHoldDuration(void);               // Get gesture hold time in milliseconds
+/// Get latest detected gesture
+pub const getGestureDetected = ray.GetGestureDetected;
+/// Get gesture hold time in milliseconds
+pub const getGestureHoldDuration = ray.GetGestureHoldDuration;
 // Vector2 GetGestureDragVector(void);               // Get gesture drag vector
-// float GetGestureDragAngle(void);                  // Get gesture drag angle
+/// Get gesture drag angle
+pub const getGestureDragAngle = ray.GetGestureDragAngle;
 // Vector2 GetGesturePinchVector(void);              // Get gesture pinch delta
-// float GetGesturePinchAngle(void);                 // Get gesture pinch angle
+/// Get gesture pinch angle
+pub const getGesturePinchAngle = ray.GetGesturePinchAngle;
 //
 // //------------------------------------------------------------------------------------
 // // Camera System Functions (Module: rcamera)
