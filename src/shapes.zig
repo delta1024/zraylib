@@ -33,7 +33,7 @@ pub fn drawPixel(pos_x: i32, pos_y: i32, color: Color) void {
 
 /// Draw a color-filled rectangle
 pub fn drawRectangle(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) void {
-    ray.DrawRectangle(pos_x, pos_y, width, height, ray.Color, @bitCast(color));
+    ray.DrawRectangle(pos_x, pos_y, width, height, @bitCast(color));
 }
 /// Draw a color-filled rectangle (Vector version)
 pub fn drawRectangleV(position: Vector2, size: Vector2, color: Color) void {
