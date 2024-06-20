@@ -4,14 +4,22 @@ const ray = @cImport(@cInclude("raylib.h"));
 const t = @import("structs.zig");
 const e = @import("enums.zig");
 const Key = e.KeyboardKey;
+const Texture2D = t.Texture2D;
 const RenderTexture2D = t.RenderTexture2D;
 const ConfigFlags = e.ConfigFlags;
 const Image = t.Image;
 const Vector2 = t.Vector2;
 const Camera2D = t.Camera2D;
 const Camera3D = t.Camera3D;
+const Camera = Camera3D;
 const Shader = t.Shader;
 const VrStereoConfig = t.VrStereoConfig;
+const VrDeviceInfo = t.VrDeviceInfo;
+const Matrix = t.Matrix;
+const ShaderUniformDataType = e.ShaderUniformDataType;
+const Ray = t.Ray;
+const Vector3 = t.Vector3;
+const TraceLogLevel = e.TraceLogLevel;
 
 /// Initialize window and OpenGL context
 pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
@@ -238,32 +246,88 @@ pub fn beginVrStereoMode(config: VrStereoConfig) void {
 /// End stereo rendering (requires VR simulator)
 pub const endVrStereoMode = ray.EndVrStereoMode;
 
-// // VR stereo config functions for VR simulator
-// VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device);     // Load VR stereo config for VR simulator device parameters
-// void UnloadVrStereoConfig(VrStereoConfig config);           // Unload VR stereo config
-//
+/// Load VR stereo config for VR simulator device parameters
+pub fn loadVrStereoConfig(device: VrDeviceInfo) VrStereoConfig {
+    return @bitCast(ray.LoadVrStereoConfig(@bitCast(device)));
+}
+/// Unload VR stereo config
+pub fn unloadVrStereoConfig(config: VrStereoConfig) void {
+    ray.UnloadVrStereoConfig(@bitCast(config));
+}
+
 // // Shader management functions
 // // NOTE: Shader functionality is not available on OpenGL 1.1
-// Shader LoadShader(const char *vsFileName, const char *fsFileName);   // Load shader from files and bind default locations
-// Shader LoadShaderFromMemory(const char *vsCode, const char *fsCode); // Load shader from code strings and bind default locations
-// bool IsShaderReady(Shader shader);                                   // Check if a shader is ready
-// int GetShaderLocation(Shader shader, const char *uniformName);       // Get shader uniform location
-// int GetShaderLocationAttrib(Shader shader, const char *attribName);  // Get shader attribute location
-// void SetShaderValue(Shader shader, int locIndex, const void *value, int uniformType);               // Set shader uniform value
-// void SetShaderValueV(Shader shader, int locIndex, const void *value, int uniformType, int count);   // Set shader uniform value vector
-// void SetShaderValueMatrix(Shader shader, int locIndex, Matrix mat);         // Set shader uniform value (matrix 4x4)
-// void SetShaderValueTexture(Shader shader, int locIndex, Texture2D texture); // Set shader uniform value for texture (sampler2d)
-// void UnloadShader(Shader shader);                                    // Unload shader from GPU memory (VRAM)
+/// Load shader from files and bind default locations
+pub fn loadShader(vs_file_name: [:0]const u8, fs_file_name: [:0]const u8) Shader {
+    return @bitCast(ray.LoadShader(vs_file_name.ptr, fs_file_name.ptr));
+}
+/// Load shader from code strings and bind default locations
+pub fn loadShaderFromMemory(vs_code: [:0]const u8, fs_code: [:0]const u8) Shader {
+    return @bitCast(ray.LoadShaderFromMemory(vs_code.ptr, fs_code.ptr));
+}
+/// Check if a shader is ready
+pub fn isShaderReady(shader: Shader) bool {
+    return ray.IsShaderReady(@bitCast(shader));
+}
+/// Get shader uniform location
+pub fn getShaderLocation(shader: Shader, uniform_name: [:0]const u8) i32 {
+    return @bitCast(ray.GetShaderLocation(@bitCast(shader), uniform_name.ptr));
+}
+/// Get shader attribute location
+pub fn getShaderLocationAttrib(shader: Shader, attrib_name: [:0]const u8) i32 {
+    return @bitCast(ray.GetShaderLocationAttrib(shader, attrib_name.ptr));
+}
+/// Set shader uniform value
+pub fn setShaderValue(shader: Shader, loc_index: i32, value: ?*anyopaque, uniform_type: ShaderUniformDataType) void {
+    ray.SetShaderValue(@bitCast(shader), loc_index, value, @intFromEnum(uniform_type));
+}
+/// Set shader uniform value vector
+pub fn setShaderValueV(shader: Shader, loc_index: i32, value: ?*anyopaque, uniform_type: ShaderUniformDataType, count: i32) void {
+    ray.SetShaderValueV(@bitCast(shader), loc_index, value, @intFromEnum(uniform_type), count);
+}
+/// Set shader uniform value (matrix 4x4)
+pub fn setShaderValueMatrix(shader: Shader, loc_index: i32, mat: Matrix) void {
+    ray.SetShaderValueMatrix(@bitCast(shader), loc_index, @bitCast(mat));
+}
+/// Set shader uniform value for texture (sampler2d)
+pub fn setShaderValueTexture(shader: Shader, loc_index: i32, texture: Texture2D) void {
+    ray.SetShaderValueTexture(@bitCast(shader), loc_index, @bitCast(texture));
+}
+/// Unload shader from GPU memory (VRAM)
+pub fn unloadShader(shader: Shader) void {
+    ray.UnloadShader(@bitCast(shader));
+}
 //
 // // Screen-space-related functions
-// Ray GetMouseRay(Vector2 mousePosition, Camera camera);      // Get a ray trace from mouse position
-// Matrix GetCameraMatrix(Camera camera);                      // Get camera transform matrix (view matrix)
-// Matrix GetCameraMatrix2D(Camera2D camera);                  // Get camera 2d transform matrix
-// Vector2 GetWorldToScreen(Vector3 position, Camera camera);  // Get the screen space position for a 3d world space position
-// Vector2 GetScreenToWorld2D(Vector2 position, Camera2D camera); // Get the world space position for a 2d camera screen space position
-// Vector2 GetWorldToScreenEx(Vector3 position, Camera camera, int width, int height); // Get size position for a 3d world space position
-// Vector2 GetWorldToScreen2D(Vector2 position, Camera2D camera); // Get the screen space position for a 2d camera world space position
-//
+/// Get a ray trace from mouse position
+pub fn getMouseRay(mouse_position: Vector2, camera: Camera) Ray {
+    return @bitCast(ray.GetMouseRay(@bitCast(mouse_position), @bitCast(camera)));
+}
+/// Get camera transform matrix (view matrix)
+pub fn getCameraMatrix(camera: Camera) Matrix {
+    return @bitCast(ray.GetCameraMatrix(@bitCast(camera)));
+}
+/// Get camera 2d transform matrix
+pub fn getCameraMatrix2D(camera: Camera2D) Matrix {
+    return @bitCast(ray.GetCameraMatrix2D(@bitCast(camera)));
+}
+/// Get the screen space position for a 3d world space position
+pub fn getWorldToScreen(position: Vector3, camera: Camera) Vector2 {
+    return @bitCast(ray.GetWorldToScreen(@bitCast(position), @bitCast(camera)));
+}
+/// Get the world space position for a 2d camera screen space position
+pub fn getScreenToWorld2D(position: Vector2, camera: Camera2D) Vector2 {
+    return @bitCast(ray.GetWorldToScreen2D(@bitCast(position), @bitCast(camera)));
+}
+/// Get size position for a 3d world space position
+pub fn getWorldToScreenEx(position: Vector3, camera: Camera, width: i32, height: i32) Vector2 {
+    return @bitCast(ray.GetWorldToScreenEx(@bitCast(position), @bitCast(camera), width, height));
+}
+/// Get the screen space position for a 2d camera world space position
+pub fn getWorldToScreen2D(position: Vector2, camera: Camera2D) Vector2 {
+    return @bitCast(ray.GetWorldToScreen2D(@bitCast(position), @bitCast(camera)));
+}
+
 // // Timing-related functions
 /// Set target FPS (maximum)
 pub fn setTargetFps(fps: i32) void {
@@ -292,18 +356,41 @@ pub const waitTime = ray.WaitTime;
 pub const setRandomSeed = ray.SetRandomSeed;
 /// Get a random value between min and max (both included)
 pub const getRandomValue = ray.GetRandomValue;
-// int *LoadRandomSequence(unsigned int count, int min, int max); // Load random values sequence, no values repeated
-// void UnloadRandomSequence(int *sequence);                   // Unload random values sequence
+/// Load random values sequence, no values repeated
+pub fn loadRandomSequence(count: u32, min: i32, max: i32) []i32 {
+    const ptr: [*]i32 = ray.LoadRandomSequence(count, min, max);
+    return ptr[0..@as(usize, @intCast(count))];
+}
+/// Unload random values sequence
+pub fn unloadRandomSequence(sequence: []i32) void {
+    ray.UnloadRandomSequence(sequence.ptr);
+}
 //
 // // Misc. functions
-// void TakeScreenshot(const char *fileName);                  // Takes a screenshot of current screen (filename extension defines format)
-// void SetConfigFlags(unsigned int flags);                    // Setup init configuration flags (view FLAGS)
-// void OpenURL(const char *url);                              // Open URL with default system browser (if available)
+/// Takes a screenshot of current screen (filename extension defines format)
+pub fn takeScreenshot(file_name: [:0]const u8) void {
+    ray.TakeScreenshot(file_name.ptr);
+}
+/// Setup init configuration flags (view FLAGS)
+pub fn setConfigFlags(options: ConfigOptions) void {
+    ray.SetConfigFlags(@bitCast(options));
+}
+/// Open URL with default system browser (if available)
+pub fn openURL(url: [:0]const u7) void {
+    ray.OpenURL(url.ptr);
+}
 //
 // // NOTE: Following functions implemented in module [utils]
 // //------------------------------------------------------------------
-// void TraceLog(int logLevel, const char *text, ...);         // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
-// void SetTraceLogLevel(int logLevel);                        // Set the current threshold (minimum) log level
+/// Note: This may not work.
+/// Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+pub fn traceLog(log_level: TraceLogLevel, fmt: [:0]const u8, args: anytype) void {
+    ray.TraceLog(@intFromEnum(log_level), fmt.ptr, &args);
+}
+/// Set the current threshold (minimum) log level
+pub fn setTraceLogLevel(log_level: TraceLogLevel) void {
+    ray.SetTraceLogLevel(@intFromEnum(log_level));
+}
 // void *MemAlloc(unsigned int size);                          // Internal memory allocator
 // void *MemRealloc(void *ptr, unsigned int size);             // Internal memory reallocator
 // void MemFree(void *ptr);                                    // Internal memory free
