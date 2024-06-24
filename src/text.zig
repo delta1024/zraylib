@@ -1,3 +1,6 @@
+const ray = @cImport(@cInclude("raylib.h"));
+const t = @import("structs.zig");
+const Color = t.Color;
 // // Font loading/unloading functions
 // Font GetFontDefault(void);                                                            // Get the default Font
 // Font LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
@@ -14,6 +17,9 @@
 // // Text drawing functions
 // void DrawFPS(int posX, int posY);                                                     // Draw current FPS
 // void DrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
+pub fn drawText(text: [:0]const u8, pos_x: i32, pos_y: i32, font_size: i32, color: Color) void {
+    ray.DrawText(text.ptr, pos_x, pos_y, font_size, @bitCast(color));
+}
 // void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text using font and additional parameters
 // void DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint); // Draw text using Font and pro parameters (rotation)
 // void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float fontSize, Color tint); // Draw one character (codepoint)
