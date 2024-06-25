@@ -481,7 +481,9 @@ pub fn isKeyUp(k: Key) bool {
 }
 
 /// Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
-pub const getKeyPressed = ray.GetKeyPressed;
+pub fn getKeyPressed() Key {
+    return @enumFromInt(ray.GetKeyPressed());
+}
 /// Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
 pub const getCharPressed = ray.GetCharPressed;
 /// Set a custom key to exit program (default is ESC)
