@@ -484,7 +484,10 @@ pub fn isKeyUp(k: Key) bool {
 pub const getKeyPressed = ray.GetKeyPressed;
 /// Get char pressed (unicode), call it multiple times for chars queued, returns 0 when the queue is empty
 pub const getCharPressed = ray.GetCharPressed;
-// void SetExitKey(int key);                               // Set a custom key to exit program (default is ESC)
+/// Set a custom key to exit program (default is ESC)
+pub fn setExitKey(key: Key) void {
+    ray.SetExitKey(@intFromEnum(key));
+}
 //
 // // Input-related functions: gamepads
 // bool IsGamepadAvailable(int gamepad);                   // Check if a gamepad is available
