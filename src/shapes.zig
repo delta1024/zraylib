@@ -39,7 +39,10 @@ pub fn drawRectangle(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Col
 pub fn drawRectangleV(position: Vector2, size: Vector2, color: Color) void {
     ray.DrawRectangleV(@bitCast(position), @bitCast(size), @bitCast(color));
 }
-// void DrawRectangleRec(Rectangle rec, Color color);                                                 // Draw a color-filled rectangle
+/// Draw a color-filled rectangle
+pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
+    ray.DrawRectangleRec(@bitCast(rec), @bitCast(color));
+}
 // void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
 // void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a vertical-gradient-filled rectangle
 // void DrawRectangleGradientH(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a horizontal-gradient-filled rectangle
