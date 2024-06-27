@@ -24,6 +24,9 @@ pub fn drawPixel(pos_x: i32, pos_y: i32, color: Color) void {
 // void DrawCircleSectorLines(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color); // Draw circle sector outline
 // void DrawCircleGradient(int centerX, int centerY, float radius, Color color1, Color color2);       // Draw a gradient-filled circle
 // void DrawCircleV(Vector2 center, float radius, Color color);                                       // Draw a color-filled circle (Vector version)
+pub fn drawCircleV(center: Vector2, radius: f32, color: Color) void {
+    ray.DrawCircleV(@bitCast(center), radius, @bitCast(color));
+}
 // void DrawCircleLines(int centerX, int centerY, float radius, Color color);                         // Draw circle outline
 // void DrawCircleLinesV(Vector2 center, float radius, Color color);                                  // Draw circle outline (Vector version)
 // void DrawEllipse(int centerX, int centerY, float radiusH, float radiusV, Color color);             // Draw ellipse
