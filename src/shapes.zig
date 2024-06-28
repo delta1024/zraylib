@@ -89,7 +89,7 @@ pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
 }
 
 // bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);        // Check collision between two circles
-// bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);                         // Check collision between circle and rectangle
+/// Check collision between circle and rectangle
 pub fn checkCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) bool {
     return ray.CheckCollisionCircleRec(@bitCast(center), radius, @bitCast(rec));
 }
@@ -98,7 +98,10 @@ pub fn checkCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) boo
 // bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);               // Check if point is inside a triangle
 // bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount);                      // Check if point is within a polygon described by array of vertices
 // bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint); // Check the collision between two lines defined by two points each, returns collision point by reference
-// bool CheckCollisionPointLine(Vector2 point, Vector2 p1, Vector2 p2, int threshold);                // Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
+/// Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
+pub fn checkCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: i32) bool {
+    return ray.CheckCollisionPointLine(@bitCast(point), @bitCast(p1), @bitCast(p2), threshold);
+}
 
 /// Get collision rectangle for two rectangles collision
 pub fn getCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle {
