@@ -79,7 +79,7 @@ pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
 // Vector2 GetSplinePointBasis(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);              // Get (evaluate) spline point: B-Spline
 // Vector2 GetSplinePointCatmullRom(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float t);         // Get (evaluate) spline point: Catmull-Rom
 // Vector2 GetSplinePointBezierQuad(Vector2 p1, Vector2 c2, Vector2 p3, float t);                     // Get (evaluate) spline point: Quadratic Bezier
-// Vector2 GetSplinePointBezierCubic(Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);        // Get (evaluate) spline point: Cubic Bezier
+// Vector2 GetSplinePointBezierCubic(:Vector2 p1, Vector2 c2, Vector2 c3, Vector2 p4, float t);        // Get (evaluate) spline point: Cubic Bezier
 //
 // // Basic shapes collision detection functions
 
@@ -98,6 +98,12 @@ pub fn checkCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) boo
 // bool CheckCollisionPointTriangle(Vector2 point, Vector2 p1, Vector2 p2, Vector2 p3);               // Check if point is inside a triangle
 // bool CheckCollisionPointPoly(Vector2 point, Vector2 *points, int pointCount);                      // Check if point is within a polygon described by array of vertices
 // bool CheckCollisionLines(Vector2 startPos1, Vector2 endPos1, Vector2 startPos2, Vector2 endPos2, Vector2 *collisionPoint); // Check the collision between two lines defined by two points each, returns collision point by reference
+pub fn checkCollisionLines(start_pos1: Vector2, end_pos1: Vector2, start_pos2: Vector2, end_pos2: Vector2) ?Vector2 {
+    var out: ray.Vector2 = undefined;
+    if (ray.CheckCollisionLines(@bitCast(start_pos1), @bitCast(end_pos1), @bitCast(start_pos2), @bitCast(end_pos2), &out))
+        return @bitCast(out);
+    return null;
+}
 /// Check if point belongs to line created between two points [p1] and [p2] with defined margin in pixels [threshold]
 pub fn checkCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: i32) bool {
     return ray.CheckCollisionPointLine(@bitCast(point), @bitCast(p1), @bitCast(p2), threshold);
