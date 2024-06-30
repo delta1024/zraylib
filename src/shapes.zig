@@ -23,7 +23,7 @@ pub fn drawPixel(pos_x: i32, pos_y: i32, color: Color) void {
 // void DrawCircleSector(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color);      // Draw a piece of a circle
 // void DrawCircleSectorLines(Vector2 center, float radius, float startAngle, float endAngle, int segments, Color color); // Draw circle sector outline
 // void DrawCircleGradient(int centerX, int centerY, float radius, Color color1, Color color2);       // Draw a gradient-filled circle
-// void DrawCircleV(Vector2 center, float radius, Color color);                                       // Draw a color-filled circle (Vector version)
+/// Draw a color-filled circle (Vector version)
 pub fn drawCircleV(center: Vector2, radius: f32, color: Color) void {
     ray.DrawCircleV(@bitCast(center), radius, @bitCast(color));
 }
@@ -54,7 +54,10 @@ pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
 // void DrawRectangleLinesEx(Rectangle rec, float lineThick, Color color);                            // Draw rectangle outline with extended parameters
 // void DrawRectangleRounded(Rectangle rec, float roundness, int segments, Color color);              // Draw rectangle with rounded edges
 // void DrawRectangleRoundedLines(Rectangle rec, float roundness, int segments, float lineThick, Color color); // Draw rectangle with rounded edges outline
-// void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                                // Draw a color-filled triangle (vertex in counter-clockwise order!)
+/// Draw a color-filled triangle (vertex in counter-clockwise order!)
+pub fn drawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
+    ray.DrawTriangle(@bitCast(v1), @bitCast(v2), @bitCast(v3), @bitCast(color));
+}
 // void DrawTriangleLines(Vector2 v1, Vector2 v2, Vector2 v3, Color color);                           // Draw triangle outline (vertex in counter-clockwise order!)
 // void DrawTriangleFan(Vector2 *points, int pointCount, Color color);                                // Draw a triangle fan defined by points (first vertex is the center)
 // void DrawTriangleStrip(Vector2 *points, int pointCount, Color color);                              // Draw a triangle strip defined by points
