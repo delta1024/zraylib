@@ -82,6 +82,7 @@ pub const ConfigOptions = packed struct(c_uint) {
     borderless_windowed_mode: bool = false,
     /// Set to try enabling interlaced video format (for V3D)
     interlaced_hint: bool = false,
+    padding: u16 = 0,
 };
 /// Set window configuration state using flags (only PLATFORM_DESKTOP)
 pub fn setWindowState(flags: ConfigOptions) void {
