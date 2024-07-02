@@ -47,6 +47,9 @@ pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
     ray.DrawRectangleRec(@bitCast(rec), @bitCast(color));
 }
 // void DrawRectanglePro(Rectangle rec, Vector2 origin, float rotation, Color color);                 // Draw a color-filled rectangle with pro parameters
+pub fn drawRectanglePro(rec: Rectangle, origin: Vector2, rotation: f32, color: Color) void {
+    ray.DrawRectanglePro(@bitCast(rec), @bitCast(origin), rotation, @bitCast(color));
+}
 // void DrawRectangleGradientV(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a vertical-gradient-filled rectangle
 // void DrawRectangleGradientH(int posX, int posY, int width, int height, Color color1, Color color2);// Draw a horizontal-gradient-filled rectangle
 // void DrawRectangleGradientEx(Rectangle rec, Color col1, Color col2, Color col3, Color col4);       // Draw a gradient-filled rectangle with custom vertex colors
