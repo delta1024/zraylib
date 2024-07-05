@@ -6,12 +6,10 @@ const std = @import("std");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    const raydep = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
+
+    const link_dyn = b.systemIntegrationOption("raylib", .{
+        .default = false,
     });
-    const lib = raydep.artifact("raylib");
-    b.installArtifact(lib);
 
     const raymod = b.addModule("raylib", .{
         .optimize = optimize,
@@ -19,7 +17,17 @@ pub fn build(b: *std.Build) !void {
         .link_libc = true,
         .root_source_file = b.path("src/root.zig"),
     });
-    raymod.linkLibrary(lib);
+    if (!link_dyn) {
+        const raydep = b.dependency("raylib", .{
+            .target = target,
+            .optimize = optimize,
+        });
+        const lib = raydep.artifact("raylib");
+        b.installArtifact(lib);
+        raymod.linkLibrary(lib);
+    } else {
+        raymod.linkSystemLibrary("raylib", .{ .needed = true });
+    }
 
     const archive_step = b.step("archive", "create source tarball");
     archive_step.dependOn(try gen_archive(b));
