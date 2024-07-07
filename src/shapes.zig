@@ -27,7 +27,10 @@ pub fn drawPixel(pos_x: i32, pos_y: i32, color: Color) void {
 pub fn drawCircleV(center: Vector2, radius: f32, color: Color) void {
     ray.DrawCircleV(@bitCast(center), radius, @bitCast(color));
 }
-// void DrawCircleLines(int centerX, int centerY, float radius, Color color);                         // Draw circle outline
+/// Draw circle outline
+pub fn drawCircleLines(center_x: i32, center_y: i32, radius: f32, color: Color) void {
+    ray.DrawCircleLines(center_x, center_y, radius, @bitCast(color));
+}
 // void DrawCircleLinesV(Vector2 center, float radius, Color color);                                  // Draw circle outline (Vector version)
 // void DrawEllipse(int centerX, int centerY, float radiusH, float radiusV, Color color);             // Draw ellipse
 // void DrawEllipseLines(int centerX, int centerY, float radiusH, float radiusV, Color color);        // Draw ellipse outline
