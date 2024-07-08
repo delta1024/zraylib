@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const link_dyn = b.systemIntegrationOption("raylib", .{
-        .default = false,
+        .default = true,
     });
 
     const raymod = b.addModule("raylib", .{

@@ -98,6 +98,9 @@ pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
 }
 
 // bool CheckCollisionCircles(Vector2 center1, float radius1, Vector2 center2, float radius2);        // Check collision between two circles
+pub fn checkCollisionCircles(center_1: Vector2, radius_1: f32, center_2: Vector2, radius_2: f32) bool {
+    return ray.CheckCollisionCircles(@bitCast(center_1), radius_1, @bitCast(center_2), radius_2);
+}
 /// Check collision between circle and rectangle
 pub fn checkCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) bool {
     return ray.CheckCollisionCircleRec(@bitCast(center), radius, @bitCast(rec));
