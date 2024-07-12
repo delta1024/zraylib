@@ -44,7 +44,8 @@
         //    .lazy = false,
         //},
         .raylib = .{
-            .path = "raylib",
+            .url = "git+https://github.com/raysan5/raylib#8d5374a443509036063a350d1649408e009425e7",
+            .hash = "1220d24e5e3610e1fce46ca8c792159b8e4790bd891ccd108e2d09fd2251b555c14f",
         },
     },
 
