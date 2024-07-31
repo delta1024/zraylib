@@ -425,7 +425,11 @@ pub fn setTraceLogLevel(log_level: TraceLogLevel) void {
 // const char *GetDirectoryPath(const char *filePath);         // Get full path for a given fileName with path (uses static string)
 // const char *GetPrevDirectoryPath(const char *dirPath);      // Get previous directory path for a given path (uses static string)
 // const char *GetWorkingDirectory(void);                      // Get current working directory (uses static string)
-// const char *GetApplicationDirectory(void);                  // Get the directory of the running application (uses static string)
+/// Get the directory of the running application (uses static string)
+pub fn getApplicationDirectory() []const u8 {
+    const ptr: [*:0]const u8 = ray.GetApplicationDirectory();
+    return ptr[0..mem.indexOfSentinel(u8, 0, ptr)];
+}
 // bool ChangeDirectory(const char *dir);                      // Change working directory, return true on success
 // bool IsPathFile(const char *path);                          // Check if a given path is a file or a directory
 // FilePathList LoadDirectoryFiles(const char *dirPath);       // Load directory filepaths
