@@ -27,7 +27,10 @@ pub fn drawText(text: [:0]const u8, pos_x: i32, pos_y: i32, font_size: i32, colo
 //
 // // Text font info functions
 // void SetTextLineSpacing(int spacing);                                                 // Set vertical line spacing when drawing with line-breaks
-// int MeasureText(const char *text, int fontSize);                                      // Measure string width for default font
+/// Measure string width for default font
+pub fn measureText(text: [:0]const u8, font_size: i32) i32 {
+    return ray.MeasureText(text.ptr, font_size);
+}
 // Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
 // int GetGlyphIndex(Font font, int codepoint);                                          // Get glyph index position in font for a codepoint (unicode character), fallback to '?' if not found
 // GlyphInfo GetGlyphInfo(Font font, int codepoint);                                     // Get glyph font info data for a codepoint (unicode character), fallback to '?' if not found
