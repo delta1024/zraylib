@@ -513,19 +513,19 @@ pub const getGamepadButtonPressed = ray.GetGamepadButtonPressed;
 // // Input-related functions: mouse
 /// Check if a mouse button has been pressed once
 pub fn isMouseButtonPressed(button: MouseButton) bool {
-    return ray.IsMouseButtonPressed(@bitCast(button));
+    return ray.IsMouseButtonPressed(@intFromEnum(button));
 }
 /// Check if a mouse button is being pressed
 pub fn isMouseButtonDown(button: MouseButton) bool {
-    return ray.IsMouseButtonDown(@bitCast(button));
+    return ray.IsMouseButtonDown(@intFromEnum(button));
 }
 /// Check if a mouse button has been released once
 pub fn isMouseButtonReleased(button: MouseButton) bool {
-    return ray.IsMouseButtonReleased(@bitCast(button));
+    return ray.IsMouseButtonReleased(@intFromEnum(button));
 }
 /// Check if a mouse button is NOT being pressed
 pub fn isMouseButtonUp(button: MouseButton) bool {
-    return ray.IsMouseButtonUp(@bitCast(button));
+    return ray.IsMouseButtonUp(@intFromEnum(button));
 }
 /// Get mouse position X
 pub const getMouseX = ray.GetMouseX;
