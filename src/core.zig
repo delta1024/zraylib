@@ -519,6 +519,9 @@ pub const getMouseX = ray.GetMouseX;
 /// Get mouse position Y
 pub const getMouseY = ray.GetMouseY;
 // Vector2 GetMousePosition(void);                         // Get mouse position XY
+pub fn getMousePosition() Vector2 {
+    return @bitCast(ray.GetMousePosition());
+}
 // Vector2 GetMouseDelta(void);                            // Get mouse delta between frames
 // void SetMousePosition(int x, int y);                    // Set mouse position XY
 // void SetMouseOffset(int offsetX, int offsetY);          // Set mouse offset
