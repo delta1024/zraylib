@@ -20,6 +20,7 @@ const ShaderUniformDataType = e.ShaderUniformDataType;
 const Ray = t.Ray;
 const Vector3 = t.Vector3;
 const TraceLogLevel = e.TraceLogLevel;
+const MouseButton = e.MouseButton;
 
 /// Initialize window and OpenGL context
 pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
@@ -510,10 +511,22 @@ pub const getGamepadButtonPressed = ray.GetGamepadButtonPressed;
 // int SetGamepadMappings(const char *mappings);           // Set internal gamepad mappings (SDL_GameControllerDB)
 //
 // // Input-related functions: mouse
-// bool IsMouseButtonPressed(int button);                  // Check if a mouse button has been pressed once
-// bool IsMouseButtonDown(int button);                     // Check if a mouse button is being pressed
-// bool IsMouseButtonReleased(int button);                 // Check if a mouse button has been released once
-// bool IsMouseButtonUp(int button);                       // Check if a mouse button is NOT being pressed
+/// Check if a mouse button has been pressed once
+pub fn isMouseButtonPressed(button: MouseButton) bool {
+    return ray.IsMouseButtonPressed(@bitCast(button));
+}
+/// Check if a mouse button is being pressed
+pub fn isMouseButtonDown(button: MouseButton) bool {
+    return ray.IsMouseButtonDown(@bitCast(button));
+}
+/// Check if a mouse button has been released once
+pub fn isMouseButtonReleased(button: MouseButton) bool {
+    return ray.IsMouseButtonReleased(@bitCast(button));
+}
+/// Check if a mouse button is NOT being pressed
+pub fn isMouseButtonUp(button: MouseButton) bool {
+    return ray.IsMouseButtonUp(@bitCast(button));
+}
 /// Get mouse position X
 pub const getMouseX = ray.GetMouseX;
 /// Get mouse position Y
