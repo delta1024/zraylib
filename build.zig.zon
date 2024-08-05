@@ -44,8 +44,8 @@
         //    .lazy = false,
         //},
         .raylib = .{
-            .url = "git+https://github.com/raysan5/raylib#8d5374a443509036063a350d1649408e009425e7",
-            .hash = "1220d24e5e3610e1fce46ca8c792159b8e4790bd891ccd108e2d09fd2251b555c14f",
+            .url = "git+https://github.com/raysan5/raylib#9c2ba3bfb7166b71a852d4a4912363d0977c8676",
+            .hash = "1220e5ccc6aa3df91b03d85f6a59d1840b0beac24df3fbd3f275285ef98da79b6e11",
             .lazy = true,
         },
     },
