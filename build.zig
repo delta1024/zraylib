@@ -18,10 +18,10 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("src/root.zig"),
     });
     if (!link_dyn) {
-        const raydep = b.dependency("raylib", .{
+        const raydep = b.lazyDependency("raylib", .{
             .target = target,
             .optimize = optimize,
-        });
+        }) orelse return;
         const lib = raydep.artifact("raylib");
         b.installArtifact(lib);
         raymod.linkLibrary(lib);
