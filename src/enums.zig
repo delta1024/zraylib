@@ -1,3 +1,4 @@
+const c = @cImport(@cInclude("raylib.h"));
 /// System/Window config flags
 /// NOTE: Every bit registers one state (use it with bit masks)
 /// By default all flags are set to 0
@@ -39,21 +40,21 @@ pub const ConfigFlags = enum(c_int) {
 /// Organized by priority level
 pub const TraceLogLevel = enum(c_int) {
     /// Display all logs
-    All = 0,
+    All = c.LOG_ALL,
     /// Trace logging, intended for internal use only
-    Trace,
+    Trace = c.LOG_TRACE,
     /// Debug logging, used for internal debugging, it should be disabled on release builds
-    Debug,
+    Debug = c.LOG_DEBUG,
     /// Info logging, used for program execution info
-    Info,
+    Info = c.LOG_INFO,
     /// Warning logging, used on recoverable failures
-    Warning,
+    Warning = c.LOG_WARNING,
     /// Error logging, used on unrecoverable failures
-    Error,
+    Error = c.LOG_ERROR,
     /// Fatal logging, used to abort program: exit(EXIT_FAILURE)
-    Fatal,
+    Fatal = c.LOG_FATAL,
     /// Disable logging
-    None,
+    None = c.LOG_NONE,
 };
 
 /// Keyboard keys (US keyboard layout)
